@@ -1,0 +1,5 @@
+struct LidarMessage
+{
+    float linearX;
+    float angularZ;
+};
