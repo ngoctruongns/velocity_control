@@ -1,4 +1,4 @@
-struct LidarMessage
+struct MotorControlMsg
 {
     float linearX;
     float angularZ;

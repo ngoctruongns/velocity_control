@@ -1,0 +1,5 @@
+struct WheelEncoderMsg
+{
+    long encLeft;
+    long encRight;
+};

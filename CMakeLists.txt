@@ -9,17 +9,47 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
 
-if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  # the following line skips the linter which checks for copyrights
-  # comment the line when a copyright and license is added to all source files
-  set(ament_cmake_copyright_FOUND TRUE)
-  # the following line skips cpplint (only works in a git repo)
-  # comment the line when this package is in a git repo and when
-  # a copyright and license is added to all source files
-  set(ament_cmake_cpplint_FOUND TRUE)
-  ament_lint_auto_find_test_dependencies()
-endif()
+# Fast DDS dependencies
+find_package(fastcdr REQUIRED)
+find_package(fastrtps REQUIRED)
+
+include_directories(
+  include
+  fastdds_comm/wheel_enc
+  fastdds_comm/cmd_vel
+)
+
+#  Create library for WheelEncoderMsgSubscriber
+file(GLOB DDS_WHEELENC_SRC "fastdds_comm/wheel_enc/*.cxx")
+add_library(WheelEncoderMsg_lib ${DDS_WHEELENC_SRC})
+target_link_libraries(WheelEncoderMsg_lib fastcdr fastrtps)
+
+#  Create library for VelocityCmdPublisher
+file(GLOB DDS_VELCMD_SRC "fastdds_comm/cmd_vel/*.cxx")
+add_library(VelocityCmdMsg_lib ${DDS_VELCMD_SRC})
+target_link_libraries(VelocityCmdMsg_lib fastcdr fastrtps)
+
+# Generate the ROS2 node
+add_executable(encoder_odom_node src/encoder_odometry.cpp)
+ament_target_dependencies(encoder_odom_node
+rclcpp
+std_msgs
+nav_msgs
+geometry_msgs
+tf2_ros
+)
+
+# Link the Fast DDS libraries
+target_link_libraries(encoder_odom_node fastrtps fastcdr WheelEncoderMsg_lib)
+
+# Install the executable
+install(TARGETS
+  encoder_odom_node
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 ament_package()

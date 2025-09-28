@@ -64,64 +64,64 @@ class Cdr;
 
 
 /*!
- * @brief This class represents the structure LidarMessage defined by the user in the IDL file.
+ * @brief This class represents the structure MotorControlMsg defined by the user in the IDL file.
  * @ingroup VELOCITYMSG
  */
-class LidarMessage
+class MotorControlMsg
 {
 public:
 
     /*!
      * @brief Default constructor.
      */
-    eProsima_user_DllExport LidarMessage();
+    eProsima_user_DllExport MotorControlMsg();
 
     /*!
      * @brief Default destructor.
      */
-    eProsima_user_DllExport ~LidarMessage();
+    eProsima_user_DllExport ~MotorControlMsg();
 
     /*!
      * @brief Copy constructor.
-     * @param x Reference to the object LidarMessage that will be copied.
+     * @param x Reference to the object MotorControlMsg that will be copied.
      */
-    eProsima_user_DllExport LidarMessage(
-            const LidarMessage& x);
+    eProsima_user_DllExport MotorControlMsg(
+            const MotorControlMsg& x);
 
     /*!
      * @brief Move constructor.
-     * @param x Reference to the object LidarMessage that will be copied.
+     * @param x Reference to the object MotorControlMsg that will be copied.
      */
-    eProsima_user_DllExport LidarMessage(
-            LidarMessage&& x);
+    eProsima_user_DllExport MotorControlMsg(
+            MotorControlMsg&& x);
 
     /*!
      * @brief Copy assignment.
-     * @param x Reference to the object LidarMessage that will be copied.
+     * @param x Reference to the object MotorControlMsg that will be copied.
      */
-    eProsima_user_DllExport LidarMessage& operator =(
-            const LidarMessage& x);
+    eProsima_user_DllExport MotorControlMsg& operator =(
+            const MotorControlMsg& x);
 
     /*!
      * @brief Move assignment.
-     * @param x Reference to the object LidarMessage that will be copied.
+     * @param x Reference to the object MotorControlMsg that will be copied.
      */
-    eProsima_user_DllExport LidarMessage& operator =(
-            LidarMessage&& x);
+    eProsima_user_DllExport MotorControlMsg& operator =(
+            MotorControlMsg&& x);
 
     /*!
      * @brief Comparison operator.
-     * @param x LidarMessage object to compare.
+     * @param x MotorControlMsg object to compare.
      */
     eProsima_user_DllExport bool operator ==(
-            const LidarMessage& x) const;
+            const MotorControlMsg& x) const;
 
     /*!
      * @brief Comparison operator.
-     * @param x LidarMessage object to compare.
+     * @param x MotorControlMsg object to compare.
      */
     eProsima_user_DllExport bool operator !=(
-            const LidarMessage& x) const;
+            const MotorControlMsg& x) const;
 
     /*!
      * @brief This function sets a value in member linearX
@@ -178,7 +178,7 @@ public:
      * @return Serialized size.
      */
     eProsima_user_DllExport static size_t getCdrSerializedSize(
-            const LidarMessage& data,
+            const MotorControlMsg& data,
             size_t current_alignment = 0);
 
 

@@ -34,47 +34,37 @@ using namespace eprosima::fastcdr::exception;
 
 #include <utility>
 
-LidarMessage::LidarMessage()
+MotorControlMsg::MotorControlMsg()
 {
-    // m_linearX com.eprosima.idl.parser.typecode.PrimitiveTypeCode@491cc5c9
+    // m_linearX com.eprosima.idl.parser.typecode.PrimitiveTypeCode@6a1aab78
     m_linearX = 0.0;
-    // m_angularZ com.eprosima.idl.parser.typecode.PrimitiveTypeCode@462d5aee
+    // m_angularZ com.eprosima.idl.parser.typecode.PrimitiveTypeCode@757942a1
     m_angularZ = 0.0;
 
 }
 
-LidarMessage::~LidarMessage()
+MotorControlMsg::~MotorControlMsg()
 {
 
 
 }
 
-LidarMessage::LidarMessage(
-        const LidarMessage& x)
-{
-    m_linearX = x.m_linearX;
-    m_angularZ = x.m_angularZ;
-}
-
-LidarMessage::LidarMessage(
-        LidarMessage&& x)
+MotorControlMsg::MotorControlMsg(
+        const MotorControlMsg& x)
 {
     m_linearX = x.m_linearX;
     m_angularZ = x.m_angularZ;
 }
 
-LidarMessage& LidarMessage::operator =(
-        const LidarMessage& x)
+MotorControlMsg::MotorControlMsg(
+        MotorControlMsg&& x)
 {
-
     m_linearX = x.m_linearX;
     m_angularZ = x.m_angularZ;
-
-    return *this;
 }
 
-LidarMessage& LidarMessage::operator =(
-        LidarMessage&& x)
+MotorControlMsg& MotorControlMsg::operator =(
+        const MotorControlMsg& x)
 {
 
     m_linearX = x.m_linearX;
@@ -83,20 +73,30 @@ LidarMessage& LidarMessage::operator =(
     return *this;
 }
 
-bool LidarMessage::operator ==(
-        const LidarMessage& x) const
+MotorControlMsg& MotorControlMsg::operator =(
+        MotorControlMsg&& x)
+{
+
+    m_linearX = x.m_linearX;
+    m_angularZ = x.m_angularZ;
+
+    return *this;
+}
+
+bool MotorControlMsg::operator ==(
+        const MotorControlMsg& x) const
 {
 
     return (m_linearX == x.m_linearX && m_angularZ == x.m_angularZ);
 }
 
-bool LidarMessage::operator !=(
-        const LidarMessage& x) const
+bool MotorControlMsg::operator !=(
+        const MotorControlMsg& x) const
 {
     return !(*this == x);
 }
 
-size_t LidarMessage::getMaxCdrSerializedSize(
+size_t MotorControlMsg::getMaxCdrSerializedSize(
         size_t current_alignment)
 {
     size_t initial_alignment = current_alignment;
@@ -112,8 +112,8 @@ size_t LidarMessage::getMaxCdrSerializedSize(
     return current_alignment - initial_alignment;
 }
 
-size_t LidarMessage::getCdrSerializedSize(
-        const LidarMessage& data,
+size_t MotorControlMsg::getCdrSerializedSize(
+        const MotorControlMsg& data,
         size_t current_alignment)
 {
     (void)data;
@@ -130,7 +130,7 @@ size_t LidarMessage::getCdrSerializedSize(
     return current_alignment - initial_alignment;
 }
 
-void LidarMessage::serialize(
+void MotorControlMsg::serialize(
         eprosima::fastcdr::Cdr& scdr) const
 {
 
@@ -139,7 +139,7 @@ void LidarMessage::serialize(
 
 }
 
-void LidarMessage::deserialize(
+void MotorControlMsg::deserialize(
         eprosima::fastcdr::Cdr& dcdr)
 {
 
@@ -151,7 +151,7 @@ void LidarMessage::deserialize(
  * @brief This function sets a value in member linearX
  * @param _linearX New value for member linearX
  */
-void LidarMessage::linearX(
+void MotorControlMsg::linearX(
         float _linearX)
 {
     m_linearX = _linearX;
@@ -161,7 +161,7 @@ void LidarMessage::linearX(
  * @brief This function returns the value of member linearX
  * @return Value of member linearX
  */
-float LidarMessage::linearX() const
+float MotorControlMsg::linearX() const
 {
     return m_linearX;
 }
@@ -170,7 +170,7 @@ float LidarMessage::linearX() const
  * @brief This function returns a reference to member linearX
  * @return Reference to member linearX
  */
-float& LidarMessage::linearX()
+float& MotorControlMsg::linearX()
 {
     return m_linearX;
 }
@@ -179,7 +179,7 @@ float& LidarMessage::linearX()
  * @brief This function sets a value in member angularZ
  * @param _angularZ New value for member angularZ
  */
-void LidarMessage::angularZ(
+void MotorControlMsg::angularZ(
         float _angularZ)
 {
     m_angularZ = _angularZ;
@@ -189,7 +189,7 @@ void LidarMessage::angularZ(
  * @brief This function returns the value of member angularZ
  * @return Value of member angularZ
  */
-float LidarMessage::angularZ() const
+float MotorControlMsg::angularZ() const
 {
     return m_angularZ;
 }
@@ -198,13 +198,13 @@ float LidarMessage::angularZ() const
  * @brief This function returns a reference to member angularZ
  * @return Reference to member angularZ
  */
-float& LidarMessage::angularZ()
+float& MotorControlMsg::angularZ()
 {
     return m_angularZ;
 }
 
 
-size_t LidarMessage::getKeyMaxCdrSerializedSize(
+size_t MotorControlMsg::getKeyMaxCdrSerializedSize(
         size_t current_alignment)
 {
     size_t current_align = current_alignment;
@@ -216,12 +216,12 @@ size_t LidarMessage::getKeyMaxCdrSerializedSize(
     return current_align;
 }
 
-bool LidarMessage::isKeyDefined()
+bool MotorControlMsg::isKeyDefined()
 {
     return false;
 }
 
-void LidarMessage::serializeKey(
+void MotorControlMsg::serializeKey(
         eprosima::fastcdr::Cdr& scdr) const
 {
     (void) scdr;

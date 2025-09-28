@@ -35,7 +35,7 @@ VelocityMsgSubscriber::VelocityMsgSubscriber()
     , subscriber_(nullptr)
     , topic_(nullptr)
     , reader_(nullptr)
-    , type_(new LidarMessagePubSubType())
+    , type_(new MotorControlMsgPubSubType())
 {
 }
 
@@ -124,7 +124,7 @@ void VelocityMsgSubscriber::SubListener::on_data_available(
         DataReader* reader)
 {
     // Take data
-    LidarMessage st;
+    MotorControlMsg st;
     SampleInfo info;
 
     if (reader->take_next_sample(&st, &info) == ReturnCode_t::RETCODE_OK)

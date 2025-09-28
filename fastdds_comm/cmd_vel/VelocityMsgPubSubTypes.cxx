@@ -28,20 +28,20 @@
 using SerializedPayload_t = eprosima::fastrtps::rtps::SerializedPayload_t;
 using InstanceHandle_t = eprosima::fastrtps::rtps::InstanceHandle_t;
 
-LidarMessagePubSubType::LidarMessagePubSubType()
+MotorControlMsgPubSubType::MotorControlMsgPubSubType()
 {
-    setName("LidarMessage");
-    auto type_size = LidarMessage::getMaxCdrSerializedSize();
+    setName("MotorControlMsg");
+    auto type_size = MotorControlMsg::getMaxCdrSerializedSize();
     type_size += eprosima::fastcdr::Cdr::alignment(type_size, 4); /* possible submessage alignment */
     m_typeSize = static_cast<uint32_t>(type_size) + 4; /*encapsulation*/
-    m_isGetKeyDefined = LidarMessage::isKeyDefined();
-    size_t keyLength = LidarMessage::getKeyMaxCdrSerializedSize() > 16 ?
-            LidarMessage::getKeyMaxCdrSerializedSize() : 16;
+    m_isGetKeyDefined = MotorControlMsg::isKeyDefined();
+    size_t keyLength = MotorControlMsg::getKeyMaxCdrSerializedSize() > 16 ?
+            MotorControlMsg::getKeyMaxCdrSerializedSize() : 16;
     m_keyBuffer = reinterpret_cast<unsigned char*>(malloc(keyLength));
     memset(m_keyBuffer, 0, keyLength);
 }
 
-LidarMessagePubSubType::~LidarMessagePubSubType()
+MotorControlMsgPubSubType::~MotorControlMsgPubSubType()
 {
     if (m_keyBuffer != nullptr)
     {
@@ -49,11 +49,11 @@ LidarMessagePubSubType::~LidarMessagePubSubType()
     }
 }
 
-bool LidarMessagePubSubType::serialize(
+bool MotorControlMsgPubSubType::serialize(
         void* data,
         SerializedPayload_t* payload)
 {
-    LidarMessage* p_type = static_cast<LidarMessage*>(data);
+    MotorControlMsg* p_type = static_cast<MotorControlMsg*>(data);
 
     // Object that manages the raw buffer.
     eprosima::fastcdr::FastBuffer fastbuffer(reinterpret_cast<char*>(payload->data), payload->max_size);
@@ -78,14 +78,14 @@ bool LidarMessagePubSubType::serialize(
     return true;
 }
 
-bool LidarMessagePubSubType::deserialize(
+bool MotorControlMsgPubSubType::deserialize(
         SerializedPayload_t* payload,
         void* data)
 {
     try
     {
         //Convert DATA to pointer of your type
-        LidarMessage* p_type = static_cast<LidarMessage*>(data);
+        MotorControlMsg* p_type = static_cast<MotorControlMsg*>(data);
 
         // Object that manages the raw buffer.
         eprosima::fastcdr::FastBuffer fastbuffer(reinterpret_cast<char*>(payload->data), payload->length);
@@ -108,28 +108,28 @@ bool LidarMessagePubSubType::deserialize(
     return true;
 }
 
-std::function<uint32_t()> LidarMessagePubSubType::getSerializedSizeProvider(
+std::function<uint32_t()> MotorControlMsgPubSubType::getSerializedSizeProvider(
         void* data)
 {
     return [data]() -> uint32_t
            {
-               return static_cast<uint32_t>(type::getCdrSerializedSize(*static_cast<LidarMessage*>(data))) +
+               return static_cast<uint32_t>(type::getCdrSerializedSize(*static_cast<MotorControlMsg*>(data))) +
                       4u /*encapsulation*/;
            };
 }
 
-void* LidarMessagePubSubType::createData()
+void* MotorControlMsgPubSubType::createData()
 {
-    return reinterpret_cast<void*>(new LidarMessage());
+    return reinterpret_cast<void*>(new MotorControlMsg());
 }
 
-void LidarMessagePubSubType::deleteData(
+void MotorControlMsgPubSubType::deleteData(
         void* data)
 {
-    delete(reinterpret_cast<LidarMessage*>(data));
+    delete(reinterpret_cast<MotorControlMsg*>(data));
 }
 
-bool LidarMessagePubSubType::getKey(
+bool MotorControlMsgPubSubType::getKey(
         void* data,
         InstanceHandle_t* handle,
         bool force_md5)
@@ -139,16 +139,16 @@ bool LidarMessagePubSubType::getKey(
         return false;
     }
 
-    LidarMessage* p_type = static_cast<LidarMessage*>(data);
+    MotorControlMsg* p_type = static_cast<MotorControlMsg*>(data);
 
     // Object that manages the raw buffer.
     eprosima::fastcdr::FastBuffer fastbuffer(reinterpret_cast<char*>(m_keyBuffer),
-            LidarMessage::getKeyMaxCdrSerializedSize());
+            MotorControlMsg::getKeyMaxCdrSerializedSize());
 
     // Object that serializes the data.
     eprosima::fastcdr::Cdr ser(fastbuffer, eprosima::fastcdr::Cdr::BIG_ENDIANNESS);
     p_type->serializeKey(ser);
-    if (force_md5 || LidarMessage::getKeyMaxCdrSerializedSize() > 16)
+    if (force_md5 || MotorControlMsg::getKeyMaxCdrSerializedSize() > 16)
     {
         m_md5.init();
         m_md5.update(m_keyBuffer, static_cast<unsigned int>(ser.getSerializedDataLength()));
