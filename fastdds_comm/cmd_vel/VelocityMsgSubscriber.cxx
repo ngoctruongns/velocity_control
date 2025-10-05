@@ -120,20 +120,19 @@ void VelocityMsgSubscriber::SubListener::on_subscription_matched(
     }
 }
 
-void VelocityMsgSubscriber::SubListener::on_data_available(
-        DataReader* reader)
+void VelocityMsgSubscriber::SubListener::on_data_available(DataReader *reader)
 {
     // Take data
     MotorControlMsg st;
     SampleInfo info;
 
-    if (reader->take_next_sample(&st, &info) == ReturnCode_t::RETCODE_OK)
-    {
-        if (info.valid_data)
-        {
-            // Print your structure data here.
-            ++samples;
-            std::cout << "Sample received, count=" << samples << std::endl;
+    if (reader->take_next_sample(&st, &info) == ReturnCode_t::RETCODE_OK) {
+        if (info.valid_data && callback_) {
+            // Call the user callback
+            callback_(st);
+            samples++;
+        } else {
+            std::cout << "Received invalid data" << std::endl;
         }
     }
 }
@@ -143,4 +142,9 @@ void VelocityMsgSubscriber::run()
     std::cout << "Waiting for Data, press Enter to stop the DataReader. " << std::endl;
     std::cin.ignore();
     std::cout << "Shutting down the Subscriber." << std::endl;
+}
+
+void VelocityMsgSubscriber::set_callback(CallbackType&& cb)
+{
+    listener_.callback_ = std::move(cb);
 }

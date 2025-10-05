@@ -27,11 +27,12 @@
 #include <fastdds/dds/subscriber/DataReader.hpp>
 #include <fastdds/dds/subscriber/DataReaderListener.hpp>
 #include <fastdds/dds/subscriber/Subscriber.hpp>
+#include "VelocityMsg.h"
 
 class VelocityMsgSubscriber
 {
 public:
-
+    using CallbackType = std::function<void(const MotorControlMsg&)>;
     VelocityMsgSubscriber();
 
     virtual ~VelocityMsgSubscriber();
@@ -39,6 +40,8 @@ public:
     bool init();
 
     void run();
+
+    void set_callback(CallbackType&& cb);
 
 private:
 
@@ -65,6 +68,7 @@ private:
 
         int matched = 0;
         uint32_t samples = 0;
+        CallbackType callback_;
     }
     listener_;
 };
