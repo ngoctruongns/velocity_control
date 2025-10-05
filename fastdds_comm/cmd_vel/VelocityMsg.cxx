@@ -36,10 +36,10 @@ using namespace eprosima::fastcdr::exception;
 
 MotorControlMsg::MotorControlMsg()
 {
-    // m_linearX com.eprosima.idl.parser.typecode.PrimitiveTypeCode@6a1aab78
-    m_linearX = 0.0;
-    // m_angularZ com.eprosima.idl.parser.typecode.PrimitiveTypeCode@757942a1
-    m_angularZ = 0.0;
+    // m_leftRpm com.eprosima.idl.parser.typecode.PrimitiveTypeCode@5891e32e
+    m_leftRpm = 0;
+    // m_rightRpm com.eprosima.idl.parser.typecode.PrimitiveTypeCode@74a10858
+    m_rightRpm = 0;
 
 }
 
@@ -52,23 +52,23 @@ MotorControlMsg::~MotorControlMsg()
 MotorControlMsg::MotorControlMsg(
         const MotorControlMsg& x)
 {
-    m_linearX = x.m_linearX;
-    m_angularZ = x.m_angularZ;
+    m_leftRpm = x.m_leftRpm;
+    m_rightRpm = x.m_rightRpm;
 }
 
 MotorControlMsg::MotorControlMsg(
         MotorControlMsg&& x)
 {
-    m_linearX = x.m_linearX;
-    m_angularZ = x.m_angularZ;
+    m_leftRpm = x.m_leftRpm;
+    m_rightRpm = x.m_rightRpm;
 }
 
 MotorControlMsg& MotorControlMsg::operator =(
         const MotorControlMsg& x)
 {
 
-    m_linearX = x.m_linearX;
-    m_angularZ = x.m_angularZ;
+    m_leftRpm = x.m_leftRpm;
+    m_rightRpm = x.m_rightRpm;
 
     return *this;
 }
@@ -77,8 +77,8 @@ MotorControlMsg& MotorControlMsg::operator =(
         MotorControlMsg&& x)
 {
 
-    m_linearX = x.m_linearX;
-    m_angularZ = x.m_angularZ;
+    m_leftRpm = x.m_leftRpm;
+    m_rightRpm = x.m_rightRpm;
 
     return *this;
 }
@@ -87,7 +87,7 @@ bool MotorControlMsg::operator ==(
         const MotorControlMsg& x) const
 {
 
-    return (m_linearX == x.m_linearX && m_angularZ == x.m_angularZ);
+    return (m_leftRpm == x.m_leftRpm && m_rightRpm == x.m_rightRpm);
 }
 
 bool MotorControlMsg::operator !=(
@@ -134,8 +134,8 @@ void MotorControlMsg::serialize(
         eprosima::fastcdr::Cdr& scdr) const
 {
 
-    scdr << m_linearX;
-    scdr << m_angularZ;
+    scdr << m_leftRpm;
+    scdr << m_rightRpm;
 
 }
 
@@ -143,64 +143,64 @@ void MotorControlMsg::deserialize(
         eprosima::fastcdr::Cdr& dcdr)
 {
 
-    dcdr >> m_linearX;
-    dcdr >> m_angularZ;
+    dcdr >> m_leftRpm;
+    dcdr >> m_rightRpm;
 }
 
 /*!
- * @brief This function sets a value in member linearX
- * @param _linearX New value for member linearX
+ * @brief This function sets a value in member leftRpm
+ * @param _leftRpm New value for member leftRpm
  */
-void MotorControlMsg::linearX(
-        float _linearX)
+void MotorControlMsg::leftRpm(
+        int32_t _leftRpm)
 {
-    m_linearX = _linearX;
+    m_leftRpm = _leftRpm;
 }
 
 /*!
- * @brief This function returns the value of member linearX
- * @return Value of member linearX
+ * @brief This function returns the value of member leftRpm
+ * @return Value of member leftRpm
  */
-float MotorControlMsg::linearX() const
+int32_t MotorControlMsg::leftRpm() const
 {
-    return m_linearX;
+    return m_leftRpm;
 }
 
 /*!
- * @brief This function returns a reference to member linearX
- * @return Reference to member linearX
+ * @brief This function returns a reference to member leftRpm
+ * @return Reference to member leftRpm
  */
-float& MotorControlMsg::linearX()
+int32_t& MotorControlMsg::leftRpm()
 {
-    return m_linearX;
+    return m_leftRpm;
 }
 
 /*!
- * @brief This function sets a value in member angularZ
- * @param _angularZ New value for member angularZ
+ * @brief This function sets a value in member rightRpm
+ * @param _rightRpm New value for member rightRpm
  */
-void MotorControlMsg::angularZ(
-        float _angularZ)
+void MotorControlMsg::rightRpm(
+        int32_t _rightRpm)
 {
-    m_angularZ = _angularZ;
+    m_rightRpm = _rightRpm;
 }
 
 /*!
- * @brief This function returns the value of member angularZ
- * @return Value of member angularZ
+ * @brief This function returns the value of member rightRpm
+ * @return Value of member rightRpm
  */
-float MotorControlMsg::angularZ() const
+int32_t MotorControlMsg::rightRpm() const
 {
-    return m_angularZ;
+    return m_rightRpm;
 }
 
 /*!
- * @brief This function returns a reference to member angularZ
- * @return Reference to member angularZ
+ * @brief This function returns a reference to member rightRpm
+ * @return Reference to member rightRpm
  */
-float& MotorControlMsg::angularZ()
+int32_t& MotorControlMsg::rightRpm()
 {
-    return m_angularZ;
+    return m_rightRpm;
 }
 
 

@@ -1,5 +1,5 @@
 struct MotorControlMsg
 {
-    float linearX;
-    float angularZ;
+    long leftRpm;
+    long rightRpm;
 };

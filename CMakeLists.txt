@@ -36,19 +36,28 @@ target_link_libraries(VelocityCmdMsg_lib fastcdr fastrtps)
 # Generate the ROS2 node
 add_executable(encoder_odom_node src/encoder_odometry.cpp)
 ament_target_dependencies(encoder_odom_node
-rclcpp
-std_msgs
-nav_msgs
-geometry_msgs
-tf2_ros
+    rclcpp
+    std_msgs
+    nav_msgs
+    geometry_msgs
+    tf2_ros
+)
+
+add_executable(cmd_vel_node src/control_velocity.cpp)
+ament_target_dependencies(cmd_vel_node
+    rclcpp
+    std_msgs
+    geometry_msgs
 )
 
 # Link the Fast DDS libraries
 target_link_libraries(encoder_odom_node fastrtps fastcdr WheelEncoderMsg_lib)
+target_link_libraries(cmd_vel_node fastrtps fastcdr VelocityCmdMsg_lib)
 
 # Install the executable
 install(TARGETS
   encoder_odom_node
+  cmd_vel_node
   DESTINATION lib/${PROJECT_NAME}
 )
 

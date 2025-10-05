@@ -160,3 +160,26 @@ void VelocityMsgPublisher::run()
         }
     } while (std::cin >> ch);
 }
+
+void VelocityMsgPublisher::waitSubscribers()
+{
+    std::cout << "MotorControlMsg DataWriter waiting for DataReaders." << std::endl;
+    while (listener_.matched == 0)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(250)); // Sleep 250 ms
+    }
+}
+
+void VelocityMsgPublisher::pushlishMessageData(MotorControlMsg &msg)
+{
+    if (writer_ != nullptr)
+    {
+        // Pushlish data message
+        writer_->write(&msg);
+    }
+}
+
+int VelocityMsgPublisher::getMatched() const
+{
+    return listener_.matched;
+}

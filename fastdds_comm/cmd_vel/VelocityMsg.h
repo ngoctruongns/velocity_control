@@ -124,42 +124,42 @@ public:
             const MotorControlMsg& x) const;
 
     /*!
-     * @brief This function sets a value in member linearX
-     * @param _linearX New value for member linearX
+     * @brief This function sets a value in member leftRpm
+     * @param _leftRpm New value for member leftRpm
      */
-    eProsima_user_DllExport void linearX(
-            float _linearX);
+    eProsima_user_DllExport void leftRpm(
+            int32_t _leftRpm);
 
     /*!
-     * @brief This function returns the value of member linearX
-     * @return Value of member linearX
+     * @brief This function returns the value of member leftRpm
+     * @return Value of member leftRpm
      */
-    eProsima_user_DllExport float linearX() const;
+    eProsima_user_DllExport int32_t leftRpm() const;
 
     /*!
-     * @brief This function returns a reference to member linearX
-     * @return Reference to member linearX
+     * @brief This function returns a reference to member leftRpm
+     * @return Reference to member leftRpm
      */
-    eProsima_user_DllExport float& linearX();
+    eProsima_user_DllExport int32_t& leftRpm();
 
     /*!
-     * @brief This function sets a value in member angularZ
-     * @param _angularZ New value for member angularZ
+     * @brief This function sets a value in member rightRpm
+     * @param _rightRpm New value for member rightRpm
      */
-    eProsima_user_DllExport void angularZ(
-            float _angularZ);
+    eProsima_user_DllExport void rightRpm(
+            int32_t _rightRpm);
 
     /*!
-     * @brief This function returns the value of member angularZ
-     * @return Value of member angularZ
+     * @brief This function returns the value of member rightRpm
+     * @return Value of member rightRpm
      */
-    eProsima_user_DllExport float angularZ() const;
+    eProsima_user_DllExport int32_t rightRpm() const;
 
     /*!
-     * @brief This function returns a reference to member angularZ
-     * @return Reference to member angularZ
+     * @brief This function returns a reference to member rightRpm
+     * @return Reference to member rightRpm
      */
-    eProsima_user_DllExport float& angularZ();
+    eProsima_user_DllExport int32_t& rightRpm();
 
 
     /*!
@@ -221,8 +221,8 @@ public:
 
 private:
 
-    float m_linearX;
-    float m_angularZ;
+    int32_t m_leftRpm;
+    int32_t m_rightRpm;
 };
 
 #endif // _FAST_DDS_GENERATED_VELOCITYMSG_H_
