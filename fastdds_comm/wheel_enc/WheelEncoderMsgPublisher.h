@@ -28,6 +28,7 @@
 #include <fastdds/dds/publisher/DataWriterListener.hpp>
 #include <fastdds/dds/publisher/Publisher.hpp>
 #include <fastdds/dds/topic/TypeSupport.hpp>
+#include "WheelEncoderMsg.h"
 
 class WheelEncoderMsgPublisher
 {
@@ -40,6 +41,10 @@ public:
     bool init();
 
     void run();
+
+    void    waitSubscribers();
+    void    pushlishMessageData(WheelEncoderMsg &msg);
+    int     getMatched() const;
 
 private:
 

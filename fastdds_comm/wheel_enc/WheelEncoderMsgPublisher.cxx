@@ -160,3 +160,22 @@ void WheelEncoderMsgPublisher::run()
         }
     } while (std::cin >> ch);
 }
+
+void WheelEncoderMsgPublisher::waitSubscribers()
+{
+    std::cout << "WheelEncoderMsg DataWriter waiting for DataReaders." << std::endl;
+    while (listener_.matched == 0)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(250)); // Sleep 250 ms
+    }
+}
+
+void WheelEncoderMsgPublisher::pushlishMessageData(WheelEncoderMsg &msg)
+{
+    writer_->write(&msg);
+}
+
+int WheelEncoderMsgPublisher::getMatched() const
+{
+    return listener_.matched;
+}

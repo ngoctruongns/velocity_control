@@ -1,17 +1,9 @@
 cmake_minimum_required(VERSION 3.8)
-project(velocity_control)
+project(arduino_velocity_control)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
-
-# find dependencies
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(nav_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(tf2_ros REQUIRED)
 
 # Fast DDS dependencies
 find_package(fastcdr REQUIRED)
@@ -21,6 +13,8 @@ include_directories(
   include
   fastdds_comm/wheel_enc
   fastdds_comm/cmd_vel
+  linux_comm_driver
+  serial_comm
 )
 
 #  Create library for WheelEncoderMsgSubscriber
@@ -33,32 +27,25 @@ file(GLOB DDS_VELCMD_SRC "fastdds_comm/cmd_vel/*.cxx")
 add_library(VelocityCmdMsg_lib ${DDS_VELCMD_SRC})
 target_link_libraries(VelocityCmdMsg_lib fastcdr fastrtps)
 
-# Generate the ROS2 node
-add_executable(encoder_odom_node src/encoder_odometry.cpp)
-ament_target_dependencies(encoder_odom_node
-    rclcpp
-    std_msgs
-    nav_msgs
-    geometry_msgs
-    tf2_ros
-)
+# Create library for Serial Linux driver
+file(GLOB LINUX_COMM_SRC "linux_comm_driver/*.cpp")
+add_library(SerialLinux_lib ${LINUX_COMM_SRC})
+target_link_libraries(SerialLinux_lib pthread)
 
-add_executable(cmd_vel_node src/control_velocity.cpp)
-ament_target_dependencies(cmd_vel_node
-    rclcpp
-    std_msgs
-    geometry_msgs
-)
+# Create library for Serial communication protocol
+file(GLOB SERIAL_COMM_SRC "serial_comm/*.c")
+add_library(SerialComm_lib ${SERIAL_COMM_SRC})
+target_link_libraries(SerialComm_lib pthread)
+
+# Generate the ROS2 node
+add_executable(arduino_velocity_control src/velocity_control.cpp)
 
 # Link the Fast DDS libraries
-target_link_libraries(encoder_odom_node fastrtps fastcdr WheelEncoderMsg_lib)
-target_link_libraries(cmd_vel_node fastrtps fastcdr VelocityCmdMsg_lib)
-
-# Install the executable
-install(TARGETS
-  encoder_odom_node
-  cmd_vel_node
-  DESTINATION lib/${PROJECT_NAME}
+target_link_libraries(arduino_velocity_control
+  fastrtps
+  fastcdr
+  WheelEncoderMsg_lib
+  VelocityCmdMsg_lib
+  SerialLinux_lib
+  SerialComm_lib
 )
-
-ament_package()
