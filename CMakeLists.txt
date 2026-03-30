@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(arduino_velocity_control)
+project(velocity_control)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -8,44 +8,75 @@ endif()
 # Fast DDS dependencies
 find_package(fastcdr REQUIRED)
 find_package(fastrtps REQUIRED)
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
-include_directories(
-  include
-  fastdds_comm/wheel_enc
-  fastdds_comm/cmd_vel
-  linux_comm_driver
-  serial_comm
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_library(serial_comm_lib STATIC
+  library/serial_comm/process_data_packet.c
+)
+target_include_directories(serial_comm_lib PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/library/serial_comm
 )
 
-#  Create library for WheelEncoderMsgSubscriber
-file(GLOB DDS_WHEELENC_SRC "fastdds_comm/wheel_enc/*.cxx")
-add_library(WheelEncoderMsg_lib ${DDS_WHEELENC_SRC})
-target_link_libraries(WheelEncoderMsg_lib fastcdr fastrtps)
+add_library(serial_driver_lib STATIC
+  library/serial_driver/serial_linux.cpp
+)
+target_include_directories(serial_driver_lib PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/library/serial_driver
+)
 
-#  Create library for VelocityCmdPublisher
-file(GLOB DDS_VELCMD_SRC "fastdds_comm/cmd_vel/*.cxx")
-add_library(VelocityCmdMsg_lib ${DDS_VELCMD_SRC})
-target_link_libraries(VelocityCmdMsg_lib fastcdr fastrtps)
-
-# Create library for Serial Linux driver
-file(GLOB LINUX_COMM_SRC "linux_comm_driver/*.cpp")
-add_library(SerialLinux_lib ${LINUX_COMM_SRC})
-target_link_libraries(SerialLinux_lib pthread)
-
-# Create library for Serial communication protocol
-file(GLOB SERIAL_COMM_SRC "serial_comm/*.c")
-add_library(SerialComm_lib ${SERIAL_COMM_SRC})
-target_link_libraries(SerialComm_lib pthread)
-
-# Generate the ROS2 node
-add_executable(arduino_velocity_control src/velocity_control.cpp)
-
-# Link the Fast DDS libraries
-target_link_libraries(arduino_velocity_control
-  fastrtps
+add_library(fastdds_comm_lib STATIC
+  library/fastdds_comm/raw_packet_fastdds.cpp
+)
+target_include_directories(fastdds_comm_lib PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/library/fastdds_comm
+)
+target_link_libraries(fastdds_comm_lib PUBLIC
   fastcdr
-  WheelEncoderMsg_lib
-  VelocityCmdMsg_lib
-  SerialLinux_lib
-  SerialComm_lib
+  fastrtps
 )
+
+add_executable(pi_bridge
+  pi_bridge/velocity_control.cpp
+)
+target_include_directories(pi_bridge PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/library/serial_comm
+  ${CMAKE_CURRENT_SOURCE_DIR}/library/serial_driver
+  ${CMAKE_CURRENT_SOURCE_DIR}/library/fastdds_comm
+)
+target_link_libraries(pi_bridge
+  serial_comm_lib
+  serial_driver_lib
+  fastdds_comm_lib
+)
+
+add_executable(ros2_bridge
+  ros2_bridge/ros2_bridge_node.cpp
+)
+target_include_directories(ros2_bridge PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/library/serial_comm
+  ${CMAKE_CURRENT_SOURCE_DIR}/library/fastdds_comm
+)
+ament_target_dependencies(ros2_bridge
+  rclcpp
+  std_msgs
+  geometry_msgs
+)
+target_link_libraries(ros2_bridge
+  serial_comm_lib
+  fastdds_comm_lib
+)
+
+install(TARGETS
+  pi_bridge
+  ros2_bridge
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+ament_package()
