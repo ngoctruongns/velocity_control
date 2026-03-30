@@ -32,10 +32,10 @@ target_include_directories(serial_driver_lib PUBLIC
 )
 
 add_library(fastdds_comm_lib STATIC
-  library/fastdds_comm/raw_packet_fastdds.cpp
+  fastdds_comm/raw_packet_fastdds.cpp
 )
 target_include_directories(fastdds_comm_lib PUBLIC
-  ${CMAKE_CURRENT_SOURCE_DIR}/library/fastdds_comm
+  ${CMAKE_CURRENT_SOURCE_DIR}/fastdds_comm
 )
 target_link_libraries(fastdds_comm_lib PUBLIC
   fastcdr
@@ -48,7 +48,7 @@ add_executable(pi_bridge
 target_include_directories(pi_bridge PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/library/serial_comm
   ${CMAKE_CURRENT_SOURCE_DIR}/library/serial_driver
-  ${CMAKE_CURRENT_SOURCE_DIR}/library/fastdds_comm
+  ${CMAKE_CURRENT_SOURCE_DIR}/fastdds_comm
 )
 target_link_libraries(pi_bridge
   serial_comm_lib
@@ -61,7 +61,7 @@ add_executable(ros2_bridge
 )
 target_include_directories(ros2_bridge PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/library/serial_comm
-  ${CMAKE_CURRENT_SOURCE_DIR}/library/fastdds_comm
+  ${CMAKE_CURRENT_SOURCE_DIR}/fastdds_comm
 )
 ament_target_dependencies(ros2_bridge
   rclcpp
