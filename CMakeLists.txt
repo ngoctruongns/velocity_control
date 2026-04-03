@@ -5,60 +5,82 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# find dependencies
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(nav_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(tf2_ros REQUIRED)
-
 # Fast DDS dependencies
 find_package(fastcdr REQUIRED)
 find_package(fastrtps REQUIRED)
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
-include_directories(
-  include
-  fastdds_comm/wheel_enc
-  fastdds_comm/cmd_vel
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_library(serial_comm_lib STATIC
+  library/serial_comm/process_data_packet.c
+)
+target_include_directories(serial_comm_lib PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/library/serial_comm
 )
 
-#  Create library for WheelEncoderMsgSubscriber
-file(GLOB DDS_WHEELENC_SRC "fastdds_comm/wheel_enc/*.cxx")
-add_library(WheelEncoderMsg_lib ${DDS_WHEELENC_SRC})
-target_link_libraries(WheelEncoderMsg_lib fastcdr fastrtps)
-
-#  Create library for VelocityCmdPublisher
-file(GLOB DDS_VELCMD_SRC "fastdds_comm/cmd_vel/*.cxx")
-add_library(VelocityCmdMsg_lib ${DDS_VELCMD_SRC})
-target_link_libraries(VelocityCmdMsg_lib fastcdr fastrtps)
-
-# Generate the ROS2 node
-add_executable(encoder_odom_node src/encoder_odometry.cpp)
-ament_target_dependencies(encoder_odom_node
-    rclcpp
-    std_msgs
-    nav_msgs
-    geometry_msgs
-    tf2_ros
+add_library(serial_driver_lib STATIC
+  library/serial_driver/serial_linux.cpp
+)
+target_include_directories(serial_driver_lib PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/library/serial_driver
 )
 
-add_executable(cmd_vel_node src/control_velocity.cpp)
-ament_target_dependencies(cmd_vel_node
-    rclcpp
-    std_msgs
-    geometry_msgs
+add_library(fastdds_comm_lib STATIC
+  fastdds_comm/raw_packet_fastdds.cpp
+)
+target_include_directories(fastdds_comm_lib PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/fastdds_comm
+)
+target_link_libraries(fastdds_comm_lib PUBLIC
+  fastcdr
+  fastrtps
 )
 
-# Link the Fast DDS libraries
-target_link_libraries(encoder_odom_node fastrtps fastcdr WheelEncoderMsg_lib)
-target_link_libraries(cmd_vel_node fastrtps fastcdr VelocityCmdMsg_lib)
+add_executable(pi_bridge
+  pi_bridge/velocity_control.cpp
+)
+target_include_directories(pi_bridge PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/library/serial_comm
+  ${CMAKE_CURRENT_SOURCE_DIR}/library/serial_driver
+  ${CMAKE_CURRENT_SOURCE_DIR}/fastdds_comm
+)
+target_link_libraries(pi_bridge
+  serial_comm_lib
+  serial_driver_lib
+  fastdds_comm_lib
+)
 
-# Install the executable
+add_executable(ros2_bridge
+  ros2_bridge/ros2_bridge_node.cpp
+)
+target_include_directories(ros2_bridge PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/library/serial_comm
+  ${CMAKE_CURRENT_SOURCE_DIR}/fastdds_comm
+)
+ament_target_dependencies(ros2_bridge
+  rclcpp
+  std_msgs
+  geometry_msgs
+)
+target_link_libraries(ros2_bridge
+  serial_comm_lib
+  fastdds_comm_lib
+)
+
 install(TARGETS
-  encoder_odom_node
-  cmd_vel_node
+  pi_bridge
+  ros2_bridge
   DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY joy_stick/
+  DESTINATION share/${PROJECT_NAME}/joy_stick
 )
 
 ament_package()

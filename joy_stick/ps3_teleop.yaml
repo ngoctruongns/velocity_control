@@ -1,0 +1,23 @@
+# Parameters for teleop_twist_joy to convert PS3 joystick data into /cmd_vel
+teleop_twist_joy_node:
+  ros__parameters:
+    # Hold L1 to enable normal speed output
+    require_enable_button: true
+    enable_button: 4
+
+    # Hold R1 for turbo speed
+    enable_turbo_button: 5
+
+    # Axis mapping (typical Linux mapping for PS3 controller)
+    # Left stick vertical -> linear.x
+    axis_linear.x: 1
+    # Right stick horizontal -> angular.z
+    axis_angular.yaw: 3
+
+    # Normal speed scales
+    scale_linear.x: 0.5
+    scale_angular.yaw: 1.57
+
+    # Turbo speed scales
+    scale_linear_turbo.x: 0.8
+    scale_angular_turbo.yaw: 3.14
