@@ -93,8 +93,8 @@ All UART communication uses a framed binary protocol (defined in `library/serial
 | 2 | `WHEEL_ENC_COMMAND` | Left / right encoder tick counts |
 | 3 | `PID_CONFIG_COMMAND` | PID gains (Kp, Ki, Kd) |
 | 4 | `COMM_CTRL_COMMAND` | Enable/disable feedback streams |
-| 5 | `LED_CONTROL_COMMAND` | RGB LED mode and color |
-| 6 | `BUZZER_CONTROL_COMMAND` | Buzzer on/off/pattern |
+| 5 | `LED_CONTROL_COMMAND` | LED type/mode, RGB color, and effect parameters |
+| 6 | `BUZZER_CONTROL_COMMAND` | Buzzer type/mode and effect parameters |
 | 7 | `MOTOR_RPM_COMMAND` | Actual motor RPM feedback |
 
 ---
@@ -166,9 +166,9 @@ Use this if you want `ros2 run velocity_control ros2_bridge`.
 
 ```bash
 cd ~/ros2_ws
-source /opt/ros/humble/setup.bash
+source /opt/ros/humble/setup.zsh
 colcon build --packages-select velocity_control
-source install/setup.bash
+source install/setup.zsh
 ```
 
 Run ROS2 node:
@@ -176,6 +176,52 @@ Run ROS2 node:
 ```bash
 ros2 run velocity_control ros2_bridge
 ```
+
+### PS3 Joystick to `/cmd_vel` (Laptop ROS2)
+
+This package includes a ready-to-use launch setup for a PS3 controller:
+
+- Launch file: `joy_stick/ps3_cmd_vel.launch.py`
+- Teleop config: `joy_stick/ps3_teleop.yaml`
+
+Install required ROS2 packages (Ubuntu Humble):
+
+```bash
+sudo apt update
+sudo apt install ros-humble-joy ros-humble-teleop-twist-joy
+```
+
+Build and run from ROS2 workspace (`zsh`):
+
+```bash
+cd ~/ros2_ws
+source /opt/ros/humble/setup.zsh
+colcon build --packages-select velocity_control
+source install/setup.zsh
+ros2 launch velocity_control ps3_cmd_vel.launch.py
+```
+
+Verify joystick output:
+
+```bash
+ros2 topic echo /joy
+ros2 topic echo /cmd_vel
+```
+
+Default control mapping in `ps3_teleop.yaml`:
+
+- Hold `L1` to enable normal speed (`enable_button: 4`)
+- Hold `R1` for turbo (`enable_turbo_button: 5`)
+- Left stick vertical controls `linear.x`
+- Right stick horizontal controls `angular.z`
+
+If your PS3 mapping differs on your Linux driver, run:
+
+```bash
+ros2 topic echo /joy
+```
+
+Then update axis/button indices in `joy_stick/ps3_teleop.yaml` accordingly.
 
 ### Runtime Setup (Pi + Laptop)
 
@@ -204,11 +250,11 @@ ros2 topic pub -1 /pid_config geometry_msgs/msg/Vector3 \
 # comm_ctrl -> COMM_CTRL_COMMAND (example: FEEDBACK_ALL = 255)
 ros2 topic pub -1 /comm_ctrl std_msgs/msg/UInt8 "{data: 255}"
 
-# led_control -> LED_CONTROL_COMMAND, format [r, g, b, param1, param2]
-ros2 topic pub -1 /led_control std_msgs/msg/UInt16MultiArray "{data: [255, 0, 0, 100, 500]}"
+# led_control -> LED_CONTROL_COMMAND, format [led_type, r, g, b, param1, param2]
+ros2 topic pub -1 /led_control std_msgs/msg/UInt16MultiArray "{data: [1, 255, 0, 0, 100, 500]}"
 
-# buzzer_control -> BUZZER_CONTROL_COMMAND, format [param1, param2]
-ros2 topic pub -1 /buzzer_control std_msgs/msg/UInt16MultiArray "{data: [300, 200]}"
+# buzzer_control -> BUZZER_CONTROL_COMMAND, format [buzzer_type, param1, param2]
+ros2 topic pub -1 /buzzer_control std_msgs/msg/UInt16MultiArray "{data: [1, 300, 200]}"
 ```
 
 ### ROS2 Parameters (`ros2_bridge`)

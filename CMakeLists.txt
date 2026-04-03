@@ -79,4 +79,8 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
 )
 
+install(DIRECTORY joy_stick/
+  DESTINATION share/${PROJECT_NAME}/joy_stick
+)
+
 ament_package()

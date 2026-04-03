@@ -140,32 +140,34 @@ private:
 
     void onLedControl(const std_msgs::msg::UInt16MultiArray::SharedPtr msg)
     {
-        if (msg->data.size() < 5) {
-            RCLCPP_WARN(get_logger(), "led_control expects [r, g, b, param1, param2]");
+        if (msg->data.size() < 6) {
+            RCLCPP_WARN(get_logger(), "led_control expects [led_type, r, g, b, param1, param2]");
             return;
         }
 
         LEDControlType cmd{};
         cmd.type = LED_CONTROL_COMMAND;
-        cmd.r = static_cast<uint8_t>(std::min<uint16_t>(msg->data[0], 255));
-        cmd.g = static_cast<uint8_t>(std::min<uint16_t>(msg->data[1], 255));
-        cmd.b = static_cast<uint8_t>(std::min<uint16_t>(msg->data[2], 255));
-        cmd.param1 = msg->data[3];
-        cmd.param2 = msg->data[4];
+        cmd.led_type = msg->data[0];
+        cmd.r = static_cast<uint8_t>(std::min<uint16_t>(msg->data[1], 255));
+        cmd.g = static_cast<uint8_t>(std::min<uint16_t>(msg->data[2], 255));
+        cmd.b = static_cast<uint8_t>(std::min<uint16_t>(msg->data[3], 255));
+        cmd.param1 = msg->data[4];
+        cmd.param2 = msg->data[5];
         sendPacket(cmd);
     }
 
     void onBuzzerControl(const std_msgs::msg::UInt16MultiArray::SharedPtr msg)
     {
-        if (msg->data.size() < 2) {
-            RCLCPP_WARN(get_logger(), "buzzer_control expects [param1, param2]");
+        if (msg->data.size() < 3) {
+            RCLCPP_WARN(get_logger(), "buzzer_control expects [buzzer_type, param1, param2]");
             return;
         }
 
         BuzzerControlType cmd{};
         cmd.type = BUZZER_CONTROL_COMMAND;
-        cmd.param1 = msg->data[0];
-        cmd.param2 = msg->data[1];
+        cmd.buzzer_type = msg->data[0];
+        cmd.param1 = msg->data[1];
+        cmd.param2 = msg->data[2];
         sendPacket(cmd);
     }
 
