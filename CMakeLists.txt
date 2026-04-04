@@ -10,6 +10,7 @@ find_package(fastcdr REQUIRED)
 find_package(fastrtps REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
@@ -73,14 +74,30 @@ target_link_libraries(ros2_bridge
   fastdds_comm_lib
 )
 
+add_executable(ps3_utils_control
+  joy_stick/ps3_utils_control.cpp
+)
+ament_target_dependencies(ps3_utils_control
+  rclcpp
+  sensor_msgs
+  std_msgs
+)
+
 install(TARGETS
   pi_bridge
   ros2_bridge
+  ps3_utils_control
   DESTINATION lib/${PROJECT_NAME}
 )
 
 install(DIRECTORY joy_stick/
   DESTINATION share/${PROJECT_NAME}/joy_stick
+)
+
+install(FILES
+  ros2_bridge/ros2_bridge_params.yaml
+  ros2_bridge/ros2_bridge.launch.py
+  DESTINATION share/${PROJECT_NAME}/ros2_bridge
 )
 
 ament_package()

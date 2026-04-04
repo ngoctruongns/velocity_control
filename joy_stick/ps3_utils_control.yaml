@@ -1,0 +1,37 @@
+ps3_utils_control_node:
+  ros__parameters:
+    joy_topic: "/joy"
+    led_topic: "/led_control"
+    buzzer_topic: "/buzzer_control"
+
+    # List all named mappings. Each mapping describes one button action.
+    mappings:
+      - led_green_y
+      - led_red_x
+      - buzzer_short_a
+      - buzzer_long_b
+
+    # Typical Linux PS3 mapping (can vary by driver):
+    # square=3, cross=0, circle=1, triangle=2
+
+    led_green_y.button: 3
+    led_green_y.target: "led"
+    led_green_y.trigger_on_press: true
+    # LED command format: [led_type, r, g, b, param1, param2]
+    led_green_y.command: [2, 0, 255, 0, 200, 200]
+
+    led_red_x.button: 2
+    led_red_x.target: "led"
+    led_red_x.trigger_on_press: true
+    led_red_x.command: [3, 255, 0, 0, 50, 0]
+
+    buzzer_short_a.button: 0
+    buzzer_short_a.target: "buzzer"
+    buzzer_short_a.trigger_on_press: true
+    # Buzzer command format: [buzzer_type, param1, param2]
+    buzzer_short_a.command: [2, 200, 50]
+
+    buzzer_long_b.button: 1
+    buzzer_long_b.target: "buzzer"
+    buzzer_long_b.trigger_on_press: true
+    buzzer_long_b.command: [1, 200, 500]

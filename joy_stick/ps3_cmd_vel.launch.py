@@ -12,6 +12,12 @@ def generate_launch_description():
         'ps3_teleop.yaml',
     )
 
+    utils_config_file = os.path.join(
+        get_package_share_directory('velocity_control'),
+        'joy_stick',
+        'ps3_utils_control.yaml',
+    )
+
     joy_node = Node(
         package='joy',
         executable='joy_node',
@@ -35,7 +41,16 @@ def generate_launch_description():
         ],
     )
 
+    utils_node = Node(
+        package='velocity_control',
+        executable='ps3_utils_control',
+        name='ps3_utils_control_node',
+        output='screen',
+        parameters=[utils_config_file],
+    )
+
     return LaunchDescription([
         joy_node,
         teleop_node,
+        utils_node,
     ])

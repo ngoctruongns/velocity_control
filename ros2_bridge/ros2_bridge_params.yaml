@@ -1,0 +1,7 @@
+ros2_bridge_node:
+  ros__parameters:
+    # Wheel radius in meters
+    wheel_radius: 0.0335
+
+    # Distance between left and right wheels in meters
+    wheel_separation: 0.252
