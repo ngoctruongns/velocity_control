@@ -135,6 +135,29 @@ velocity_control/
 
 ## Build & Run
 
+### 1. Clone and set up library dependencies
+
+The `library/` subdirectories are separate git repositories. After cloning this repo, fetch them with [vcstool](https://github.com/dirk-thomas/vcstool):
+
+```zsh
+cd ~/ros2_ws/src/velocity_control
+vcs import < deps.repos
+```
+
+If `vcs` is not installed:
+
+```zsh
+# On a machine with ROS2 Humble it is already available.
+# Otherwise install manually:
+pip install vcstool
+```
+
+To update all libraries to latest:
+
+```zsh
+vcs pull
+```
+
 ### Dependencies
 - Ubuntu 22.04 + ROS2 Humble (recommended)
 - FastDDS / Fast-CDR (`fastrtps`, `fastcdr`)

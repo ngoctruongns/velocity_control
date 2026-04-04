@@ -1,0 +1,10 @@
+repositories:
+  library/serial_comm:
+    type: git
+    url: git@github.com:ngoctruongns/serial_comm.git
+    version: main
+
+  library/serial_driver:
+    type: git
+    url: git@github.com:ngoctruongns/linux_comm_driver.git
+    version: main
