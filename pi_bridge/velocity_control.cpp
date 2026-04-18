@@ -96,7 +96,7 @@ int main(int argc, char **argv)
         return -3;
     }
 
-    std::cout << "pi_bridge started on " << uart_port << " @ " << uart_baudrate << "\n";
+    std::cout << "pi_bridge started on " << uart_port << " @ " << uart_baudrate << std::endl;
 
     UartFrameCollector collector;
     std::vector<uint8_t> frame;

@@ -13,6 +13,8 @@ find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
@@ -74,6 +76,17 @@ target_link_libraries(ros2_bridge
   fastdds_comm_lib
 )
 
+add_executable(wheel_odometry_node
+  ros2_bridge/wheel_odometry_node.cpp
+)
+ament_target_dependencies(wheel_odometry_node
+  rclcpp
+  std_msgs
+  geometry_msgs
+  nav_msgs
+  tf2_ros
+)
+
 add_executable(ps3_utils_control
   joy_stick/ps3_utils_control.cpp
 )
@@ -86,6 +99,7 @@ ament_target_dependencies(ps3_utils_control
 install(TARGETS
   pi_bridge
   ros2_bridge
+  wheel_odometry_node
   ps3_utils_control
   DESTINATION lib/${PROJECT_NAME}
 )
